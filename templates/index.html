@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* 响应式布局样式 */
+        @media screen and (max-width: 600px) {
+            /* 当屏幕宽度小于等于 600px 时应用以下样式 */
+            #username {
+                font-size: 18px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            input[type="text"] {
+                width: 80%;
+            }
+            button {
+                width: 20%;
+            }
+            #chat-box {
+                width: 100%;
+            }
+        }
+
+        /* 使用 flexbox 实现居中布局 */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* 将页面高度设置为视口高度，使元素垂直居中 */
+        }
+
+        #username {
+            margin-bottom: 0;
+        }
+
+        #hello {
+            margin-top: 0;
+        }
+
+        /* 页脚样式 */
+        footer {
+            background-color: #f1f1f1;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+    </style>
+    <title>Real-time Chat</title>
+</head>
+<body>
+    <h1 id="username">{{ username }}</h1>
+    <h1 id="hello">你好, 欢迎来到聊天室！</h1>
+    <h1 id="DOI" style="display: none;">{{ number }}</h1>
+    
+    <div>
+        <input type="text" id="input-box">
+        <button onclick="sendMessage()">发送</button>
+    </div>
+    <br>
+    <div>
+        <label>聊天记录：</label><br>
+        <textarea id="chat-box" cols="40" rows="10" readonly></textarea><br>
+        <!-- 目前在线人数：<label id="online">{{ online }}</label> -->
+    </div>
+    <footer>
+        Server is runnig on PC that belongs to ZJ.
+    </footer>
+</body>
+<script>
+    var nu = document.getElementById("DOI");
+    // nu.textContent是一个String,不是数字
+    var socket = new WebSocket("ws://192.168.31.250:8000/ws/" + nu.textContent);
+
+    // //当socket建立连接时触发
+    // socket.onopen = function() {
+    //     var onlineNu = document.getElementById("online");
+    //     onlineNu.textContent = data.online;
+    // };
+
+    //当服务器接受到消息时触发
+    socket.onmessage = function(event) {
+        var data = JSON.parse(event.data);
+        var chatBox = document.getElementById("chat-box");
+        // var onlineNu = document.getElementById("online");
+        chatBox.value += data.message + "\n";
+        // onlineNu.textContent = data.online;
+    };
+
+    // //当socket连接关闭时触发
+    // socket.onclose = function(event) {
+    //     var onlineNu = document.getElementById("online");
+    //     onlineNu.textContent = data.online;
+    // };
+
+    function sendMessage() {
+        var inputBox = document.getElementById("input-box");
+        var message = inputBox.value;
+        inputBox.value = "";
+
+        socket.send(message);
+    }
+
+    // 监听键盘事件（回车执行发送消息）
+    document.addEventListener("keydown", function(event) {
+            // 判断按下的键是否是回车键（key code: 13）
+            if (event.keyCode === 13) {
+                // 阻止默认的表单提交行为
+                event.preventDefault();
+                // 执行发送操作
+                sendMessage();
+            }
+        });
+</script>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* 响应式布局样式 */
+        @media screen and (max-width: 600px) {
+            /* 当屏幕宽度小于等于 600px 时应用以下样式 */
+            body {
+                padding: 10px;
+            }
+            form {
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        }
+
+        body {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        /* 页脚样式 */
+        footer {
+            background-color: #f1f1f1;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+    </style>
+    <title>Login</title>
+</head>
+<body>
+    <!-- 上传表单时会绑定让submit函数处理 -->
+    <form action="/submit" method="post">
+        <label for="username">聊天昵称：</label>
+        <input type="text" name="username" id="username" required>
+        <br><br>
+        <button type="submit">进入聊天</button>
+    </form>
+    <footer>
+        Server is runnig on PC that belongs to ZJ.
+    </footer>
+</body>
+</html>
